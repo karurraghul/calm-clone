@@ -359,6 +359,46 @@ const MoodTracker = () => {
                         <p className="insight-value">📊</p>
                         <p className="insight-text">Track at least 3 days to see your trend</p>
                       </>
+                    ) : (
+                      <>
+                        <p className="insight-value">📝</p>
+                        <p className="insight-text">Start tracking to find out</p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="insight-card">
+                    <div className="insight-icon">💪</div>
+                    <h4>Trending Towards</h4>
+                    {moodHistory.length >= 3 ? (
+                      <>
+                        <p className="insight-value">
+                          {(() => {
+                            const recentMoods = [...moodHistory]
+                              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                              .slice(0, 3)
+                              .map(entry => entry.mood);
+                            
+                            const moodValues = {
+                              great: 5, good: 4, okay: 3, bad: 2, awful: 1
+                            };
+                            
+                            const trend = recentMoods.reduce((sum, mood, i) => {
+                              return sum + (moodValues[mood as keyof typeof moodValues] || 0) * (3 - i);
+                            }, 0) / 6;
+                            
+                            if (trend >= 4) return '📈 Better';
+                            if (trend <= 2) return '📉 Worse';
+                            return '📊 Stable';
+                          })()}
+                        </p>
+                        <p className="insight-text">Based on your recent mood entries</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="insight-value">📝</p>
+                        <p className="insight-text">Start tracking to find out</p>
+                      </>
                     )}
                   </div>
                 </div>
@@ -407,54 +447,4 @@ const MoodTracker = () => {
   );
 };
 
-export default MoodTracker;">
-                          {moods.find(m => m.id === 
-                            Object.entries(moodCounts)
-                              .sort((a, b) => b[1] - a[1])[0]?.[0]
-                          )?.emoji || '📝'}
-                        </p>
-                        <p className="insight-text">
-                          {moods.find(m => m.id === 
-                            Object.entries(moodCounts)
-                              .sort((a, b) => b[1] - a[1])[0]?.[0]
-                          )?.label || 'Start tracking to find out'}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="insight-value">📝</p>
-                        <p className="insight-text">Start tracking to find out</p>
-                      </>
-                    )}
-                  </div>
-                  
-                  <div className="insight-card">
-                    <div className="insight-icon">💪</div>
-                    <h4>Trending Towards</h4>
-                    {moodHistory.length >= 3 ? (
-                      <>
-                        <p className="insight-value">
-                          {(() => {
-                            const recentMoods = [...moodHistory]
-                              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                              .slice(0, 3)
-                              .map(entry => entry.mood);
-                            
-                            const moodValues = {
-                              great: 5, good: 4, okay: 3, bad: 2, awful: 1
-                            };
-                            
-                            const trend = recentMoods.reduce((sum, mood, i) => {
-                              return sum + (moodValues[mood as keyof typeof moodValues] || 0) * (3 - i);
-                            }, 0) / 6;
-                            
-                            if (trend >= 4) return '📈 Better';
-                            if (trend <= 2) return '📉 Worse';
-                            return '📊 Stable';
-                          })()}
-                        </p>
-                        <p className="insight-text">Based on your recent mood entries</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="insight-value
+export default MoodTracker;
